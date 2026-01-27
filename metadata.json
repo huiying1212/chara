@@ -1,0 +1,5 @@
+{
+  "name": "3D Character Gen Matrix",
+  "description": "A visualization tool to batch generate and display a 3-dimensional matrix of character designs varying by Stylization, Energy, and Physical Complexity using Gemini API.",
+  "requestFramePermissions": []
+}
