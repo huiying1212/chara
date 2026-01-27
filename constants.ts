@@ -4,38 +4,65 @@ import { AxisDefinition } from './types';
 export const SOURCE_LEVELS = 5;
 
 export const X_AXIS: AxisDefinition = {
-  name: 'Stylization (X)',
-  description: 'From Realistic Human to Abstract/Fictional Character',
+  name: 'Identity Stylization (X)',
+  description: 'From Everyday Reality to Fictional/Iconic Archetypes',
   levels: [
-    'Hyper-realistic photography, 8k resolution, raw photo, pores visible, unedited real life',
-    'Realistic portrait, soft cinematic lighting, professional photography',
-    'Semi-realistic digital art, smooth texture, concept art style, detailed shading',
-    'Stylized character design, illustrative style, cel-shaded, bold lines, 2D/3D hybrid',
-    'Abstract, highly stylized, avant-garde art, surreal features, distorted proportions, dreamlike'
+    // Level 1: 绝对真实，毫无表演痕迹
+    'Documentary photography style, ordinary everyday person, candid shot, unpolished, realistic skin texture, neutral lighting, "person next door" vibe',
+    
+    // Level 2: 职业化/社会化角色
+    'Professional portrait, specific occupation uniform (e.g., doctor, office worker), neat and tidy, socially compliant appearance, realistic but groomed',
+    
+    // Level 3: 角色扮演/表演者 (Cosplayer)
+    'Costumed performer, cosplay photography, theatrical makeup, distinct character outfit but clearly a human actor, stage lighting',
+    
+    // Level 4: 风格化角色 (Stylized Character)
+    'Highly stylized 3D character render, Pixar/Disney style, exaggerated facial features, expressive shape language, distinct silhouette',
+    
+    // Level 5: 极度虚构/文化符号 (Fictional Icon)
+    'Mythological or Superhero icon, larger-than-life presence, glowing aura, supernatural atmosphere, cultural symbol (e.g., Sun Wukong, Captain America), cinematic concept art'
   ]
 };
 
 export const Y_AXIS: AxisDefinition = {
-  name: 'Energy / Laban Effort (Y)',
-  description: 'From Restrained/Shy to Dynamic/Powerful',
+  name: 'Laban Effort & Energy (Y)',
+  description: 'From Bound/Sustained (Low) to Direct/Quick/Strong (High)',
   levels: [
-    'Sitting quietly, shy, restrained pose, looking down, low energy, folded hands, introverted',
-    'Standing still, calm, neutral expression, relaxed posture, steady breathing',
-    'Walking purposefully, confident gesture, active engagement, interacting with environment',
-    'Running, jumping, dynamic action pose, high energy, wind blowing hair, tense muscles',
-    'Explosive movement, god-like power, screaming energy, motion blur, extreme perspective, warping reality'
+    // Level 1: 极低能量，收缩 (Bound / Light / Sustained)
+    'Shy introverted body language, looking down, rounded shoulders, minimizing body space, hands clutched together, hesitant pose, soft focus',
+    
+    // Level 2: 低能量，被动 (Passive)
+    'Relaxed sitting or standing, leaning against wall, low muscle tone, calm demeanor, casual observation, slow movement',
+    
+    // Level 3: 中等能量，受控 (Neutral / Control)
+    'Confident standing posture, clear silhouette, ready to interact, stable center of gravity, professional handshake pose, balanced weight',
+    
+    // Level 4: 高能量，动态 (Dynamic / Mobile)
+    'Action-oriented, mid-motion, running or reaching, engaging core muscles, wide stance, wind-swept hair/clothing, sense of urgency',
+    
+    // Level 5: 爆发能量，戏剧化 (Explosive / Theatrical)
+    'Extreme dynamic action shot, defying gravity, mid-air jump or combat strike, exaggerated perspective (foreshortening), intense facial expression, maximum motion blur, raw power'
   ]
 };
 
 export const Z_AXIS: AxisDefinition = {
-  name: 'Physical Constraints (Z)',
-  description: 'From Standard Body to Complex Morphology/Props',
+  name: 'Embodiment Constraints (Z)',
+  description: 'From Standard Body to Modified Morphology & Tool Extension',
   levels: [
-    'Standard human anatomy, casual minimal clothing, no accessories',
-    'Wearing distinct fashion, holding a small everyday object (phone, book, cup)',
-    'Holding large tools or weapons, wearing heavy armor or elaborate historical costume',
-    'Cyborg parts, mechanical limbs, glowing tech integration, or large wings',
-    'Non-human morphology, multiple arms, floating magical objects, elemental body transformation, ethereal form'
+    // Level 1: 标准身体，无负担 (Zero Constraint)
+    'Standard athletic body type, simple tight-fitting clothing (t-shirt and jeans), no accessories, free range of motion, empty hands',
+    
+    // Level 2: 轻微约束 (Minor Constraint - Clothing/Object)
+    'Casual street wear, holding a small everyday object (smartphone, coffee cup, book), slight asymmetry in pose',
+    
+    // Level 3: 内部身体约束 (Intrinsic Constraint - Age/Frailty/Mass)
+    'Elderly body structure with a cane, or heavy distinct body mass (obese or bulky muscle), limited flexibility, visible weight distribution struggle',
+    
+    // Level 4: 外部服装约束 (Extrinsic Constraint - Costume)
+    'Restrictive clothing, long flowing Victorian dress (Cinderella style) or heavy tactical gear, voluminous fabric interacting with the environment',
+    
+    // Level 5: 身体延伸/复杂道具 (Extension - Props/Weapons/Magic)
+    'Holding large signature weapon (Shield, Golden Staff, Sword), magical effects extending from limbs, cyborg attachments, or non-human appendages (wings/tails)'
   ]
 };
 

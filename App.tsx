@@ -81,7 +81,6 @@ const App: React.FC = () => {
     Style: ${X_AXIS.levels[xLevel]}. 
     Pose/Energy: ${Y_AXIS.levels[yLevel]}. 
     Physical details: ${Z_AXIS.levels[zLevel]}. 
-    High quality, detailed.
     ${PROMPT_SUFFIX}`;
   }, [axisConfig, mapIndexToDataLevel]);
 
