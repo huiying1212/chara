@@ -15,8 +15,11 @@ import {
   RefreshCw,
   Square,
   Settings,
-  Grid3X3
+  Grid3X3,
+  LayoutGrid,
+  Boxes
 } from 'lucide-react';
+import { Grid3DView } from './components/Grid3DView';
 
 // drastically reduced concurrency to avoid 429
 const MAX_CONCURRENT_REQUESTS = 1;
@@ -36,6 +39,7 @@ const App: React.FC = () => {
   const [processing, setProcessing] = useState(false);
   const [selectedCellId, setSelectedCellId] = useState<string | null>(null);
   const [showSettings, setShowSettings] = useState(false);
+  const [viewMode, setViewMode] = useState<'2d' | '3d'>('2d');
 
   // Helper to map a grid index (e.g. 0, 1, 2) to the source data index (0, 2, 4)
   const mapIndexToDataLevel = useCallback((index: number, totalSteps: number) => {
@@ -426,6 +430,30 @@ const App: React.FC = () => {
              </div>
           </div>
 
+          {/* View Mode Toggle */}
+          <div className="flex gap-2 pt-4 border-t border-gray-800">
+            <button
+              onClick={() => setViewMode('2d')}
+              className={`flex-1 py-2 px-3 rounded-lg text-xs font-medium transition-colors flex items-center justify-center gap-2 ${
+                viewMode === '2d'
+                  ? 'bg-blue-600 text-white'
+                  : 'bg-gray-800 text-gray-400 hover:bg-gray-700 border border-gray-700'
+              }`}
+            >
+              <LayoutGrid className="w-4 h-4" /> 2D Slice
+            </button>
+            <button
+              onClick={() => setViewMode('3d')}
+              className={`flex-1 py-2 px-3 rounded-lg text-xs font-medium transition-colors flex items-center justify-center gap-2 ${
+                viewMode === '3d'
+                  ? 'bg-purple-600 text-white'
+                  : 'bg-gray-800 text-gray-400 hover:bg-gray-700 border border-gray-700'
+              }`}
+            >
+              <Boxes className="w-4 h-4" /> 3D View
+            </button>
+          </div>
+
           {/* Action Buttons */}
           <div className="space-y-3 pt-4 border-t border-gray-800">
             {(processing || queue.length > 0) ? (
@@ -533,49 +561,63 @@ const App: React.FC = () => {
         )}
 
         {/* Matrix Visualization */}
-        <div className="flex-1 p-8 overflow-auto flex flex-col items-center justify-center relative bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-gray-800/20 via-gray-900 to-gray-900">
-          
-          {/* Y-Axis Label */}
-          <div className="absolute left-8 top-1/2 -translate-y-1/2 -rotate-90 flex items-center gap-4 text-gray-400 font-medium tracking-widest origin-center whitespace-nowrap">
-             <span className="text-xs uppercase opacity-50">Low Energy</span>
-             <div className="h-px w-24 bg-gradient-to-l from-green-500/50 to-transparent"></div>
-             <Zap className="w-5 h-5 text-green-500" />
-             <span>{Y_AXIS.name}</span>
-             <Zap className="w-5 h-5 text-green-500" />
-             <div className="h-px w-24 bg-gradient-to-r from-green-500/50 to-transparent"></div>
-             <span className="text-xs uppercase opacity-50">High Energy</span>
-          </div>
+        {viewMode === '2d' ? (
+          <div className="flex-1 p-8 overflow-auto flex flex-col items-center justify-center relative bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-gray-800/20 via-gray-900 to-gray-900">
+            
+            {/* Y-Axis Label */}
+            <div className="absolute left-8 top-1/2 -translate-y-1/2 -rotate-90 flex items-center gap-4 text-gray-400 font-medium tracking-widest origin-center whitespace-nowrap">
+               <span className="text-xs uppercase opacity-50">Low Energy</span>
+               <div className="h-px w-24 bg-gradient-to-l from-green-500/50 to-transparent"></div>
+               <Zap className="w-5 h-5 text-green-500" />
+               <span>{Y_AXIS.name}</span>
+               <Zap className="w-5 h-5 text-green-500" />
+               <div className="h-px w-24 bg-gradient-to-r from-green-500/50 to-transparent"></div>
+               <span className="text-xs uppercase opacity-50">High Energy</span>
+            </div>
 
-          <div className="relative">
-             {/* Grid */}
-             <div 
-                className="grid gap-3" 
-                style={{ 
-                    gridTemplateColumns: `repeat(${axisConfig.x}, minmax(80px, 140px))` 
-                }}
-             >
-                {currentSlice.map((cell) => (
-                    <GridCell 
-                        key={cell.id} 
-                        data={cell} 
-                        selected={selectedCellId === cell.id}
-                        onClick={() => setSelectedCellId(cell.id)} 
-                    />
-                ))}
-             </div>
+            <div className="relative">
+               {/* Grid */}
+               <div 
+                  className="grid gap-3" 
+                  style={{ 
+                      gridTemplateColumns: `repeat(${axisConfig.x}, minmax(80px, 140px))` 
+                  }}
+               >
+                  {currentSlice.map((cell) => (
+                      <GridCell 
+                          key={cell.id} 
+                          data={cell} 
+                          selected={selectedCellId === cell.id}
+                          onClick={() => setSelectedCellId(cell.id)} 
+                      />
+                  ))}
+               </div>
 
-             {/* X-Axis Label */}
-             <div className="absolute -bottom-12 left-0 right-0 flex items-center justify-center gap-4 text-gray-400 font-medium tracking-widest mt-4">
-                 <span className="text-xs uppercase opacity-50">Realistic</span>
-                 <div className="h-px w-24 bg-gradient-to-l from-blue-500/50 to-transparent"></div>
-                 <Palette className="w-5 h-5 text-blue-500" />
-                 <span>{X_AXIS.name}</span>
-                 <Palette className="w-5 h-5 text-blue-500" />
-                 <div className="h-px w-24 bg-gradient-to-r from-blue-500/50 to-transparent"></div>
-                 <span className="text-xs uppercase opacity-50">Stylized</span>
-             </div>
+               {/* X-Axis Label */}
+               <div className="absolute -bottom-12 left-0 right-0 flex items-center justify-center gap-4 text-gray-400 font-medium tracking-widest mt-4">
+                   <span className="text-xs uppercase opacity-50">Realistic</span>
+                   <div className="h-px w-24 bg-gradient-to-l from-blue-500/50 to-transparent"></div>
+                   <Palette className="w-5 h-5 text-blue-500" />
+                   <span>{X_AXIS.name}</span>
+                   <Palette className="w-5 h-5 text-blue-500" />
+                   <div className="h-px w-24 bg-gradient-to-r from-blue-500/50 to-transparent"></div>
+                   <span className="text-xs uppercase opacity-50">Stylized</span>
+               </div>
+            </div>
           </div>
-        </div>
+        ) : (
+          <div className="flex-1 relative">
+            <Grid3DView
+              gridData={gridData}
+              axisConfig={axisConfig}
+              onCellClick={setSelectedCellId}
+              selectedCellId={selectedCellId}
+              xAxisName={X_AXIS.name}
+              yAxisName={Y_AXIS.name}
+              zAxisName={Z_AXIS.name}
+            />
+          </div>
+        )}
       </div>
     </div>
   );
