@@ -25,23 +25,23 @@ export const X_AXIS: AxisDefinition = {
 };
 
 export const Y_AXIS: AxisDefinition = {
-  name: 'Laban Effort & Energy (Y)',
-  description: 'From Bound/Sustained (Low) to Direct/Quick/Strong (High)',
+  name: 'Energy Presence & Expression (Y)',
+  description: 'From Subdued/Passive to Intense/Powerful (expressed through facial expression and body tension only)',
   levels: [
-    // Level 1: 极低能量，收缩 (Bound / Light / Sustained)
-    'Shy introverted body language, looking down, rounded shoulders, minimizing body space, hands clutched together, hesitant pose, soft focus',
+    // Level 1: 极低能量 - 表情和肌肉状态内敛
+    'Subdued demeanor, shy expression, avoiding eye contact, soft withdrawn look, minimal muscle tension, relaxed body, timid posture',
     
-    // Level 2: 低能量，被动 (Passive)
-    'Relaxed sitting or standing, leaning against wall, low muscle tone, calm demeanor, casual observation, slow movement',
+    // Level 2: 低能量 - 放松平静
+    'Calm demeanor, gentle neutral expression, soft gaze, low muscle tone, peaceful face, relaxed shoulders, quiet presence',
     
-    // Level 3: 中等能量，受控 (Neutral / Control)
-    'Confident standing posture, clear silhouette, ready to interact, stable center of gravity, professional handshake pose, balanced weight',
+    // Level 3: 中等能量 - 自信平衡
+    'Confident demeanor, alert expression, direct eye contact, controlled muscle tone, attentive face, balanced posture, strong presence',
     
-    // Level 4: 高能量，动态 (Dynamic / Mobile)
-    'Action-oriented, mid-motion, running or reaching, engaging core muscles, wide stance, wind-swept hair/clothing, sense of urgency',
+    // Level 4: 高能量 - 强烈但受控
+    'Strong demeanor, intense facial expression, piercing determined gaze, visible muscle tension throughout body, focused eyes, taut posture, commanding presence',
     
-    // Level 5: 爆发能量，戏剧化 (Explosive / Theatrical)
-    'Extreme dynamic action shot, defying gravity, mid-air jump or combat strike, exaggerated perspective (foreshortening), intense facial expression, maximum motion blur, raw power'
+    // Level 5: 爆发能量 - 极致戏剧化（但仍然静止）
+    'Overwhelming demeanor, explosive facial expression, fierce penetrating eyes, maximum muscle definition and tension, clenched jaw, bulging veins, taut neck muscles, extreme intensity in still form'
   ]
 };
 
@@ -66,13 +66,13 @@ export const Z_AXIS: AxisDefinition = {
   ]
 };
 
-export const DEFAULT_SUBJECT = "A character";
+// Empty by default - AI will generate character description based on axis dimensions
+export const DEFAULT_SUBJECT = "";
 
 export const PROMPT_SUFFIX = `
 Full body shot showing the complete character from head to toe.
 Standing upright in a neutral pose (arms relaxed at sides if applicable).
 Front view, eye-level perspective, facing directly forward.
-Isolated on pure white background, no props, no shadows, no other objects.
+Isolated on pure white background, no props, no shadows.
 Neutral, even lighting with no dramatic shadows.
-Professional reference image style, high resolution, clean and crisp.
 `;

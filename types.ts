@@ -9,6 +9,7 @@ export interface CellData {
   coord: Coordinate;
   imageUrl?: string;
   prompt: string;
+  characterDescription?: string; // Generated character description from text LLM
   status: 'idle' | 'queued' | 'loading' | 'success' | 'error';
 }
 

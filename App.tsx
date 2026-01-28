@@ -1,7 +1,7 @@
 import React, { useState, useEffect, useCallback, useMemo } from 'react';
 import { AxisDefinition, CellData, Coordinate, GridMatrix } from './types';
 import { SOURCE_LEVELS, X_AXIS, Y_AXIS, Z_AXIS, DEFAULT_SUBJECT, PROMPT_SUFFIX } from './constants';
-import { generateImage } from './services/geminiService';
+import { generateImage, generateCharacterDescription } from './services/geminiService';
 import { GridCell } from './components/GridCell';
 import { 
   Box, 
@@ -72,10 +72,16 @@ const App: React.FC = () => {
   }, [axisConfig]); // eslint-disable-line react-hooks/exhaustive-deps
 
   // Construct prompt for a specific cell
-  const getPromptForCell = useCallback((coord: Coordinate, subj: string) => {
+  const getPromptForCell = useCallback((coord: Coordinate, subj: string, includeAxisDetails: boolean = true) => {
     const xLevel = mapIndexToDataLevel(coord.x, axisConfig.x);
     const yLevel = mapIndexToDataLevel(coord.y, axisConfig.y);
     const zLevel = mapIndexToDataLevel(coord.z, axisConfig.z);
+
+    // If we have a generated character description, we don't need the axis details
+    // since they've already been "baked into" the character description
+    if (!includeAxisDetails) {
+      return `${subj}. ${PROMPT_SUFFIX}`;
+    }
 
     return `${subj}. 
     Style: ${X_AXIS.levels[xLevel]}. 
@@ -116,9 +122,36 @@ const App: React.FC = () => {
       const cell = gridData[id];
       if (!cell) continue;
       
-      const prompt = getPromptForCell(cell.coord, subject);
+      // Get the dimension descriptions for this cell
+      const xLevel = mapIndexToDataLevel(cell.coord.x, axisConfig.x);
+      const yLevel = mapIndexToDataLevel(cell.coord.y, axisConfig.y);
+      const zLevelIdx = mapIndexToDataLevel(cell.coord.z, axisConfig.z);
 
       try {
+        // Step 1: Generate character description using text LLM
+        let characterDesc = subject; // Default fallback
+        let useGeneratedCharacter = false;
+        
+        // Only generate character description if subject is empty or default
+        if (!subject.trim() || subject === DEFAULT_SUBJECT) {
+          console.log(`Generating character for cell ${id}...`);
+          characterDesc = await generateCharacterDescription(
+            X_AXIS.levels[xLevel],
+            Y_AXIS.levels[yLevel],
+            Z_AXIS.levels[zLevelIdx]
+          );
+          console.log(`Character generated: ${characterDesc}`);
+          useGeneratedCharacter = true;
+          
+          // Add delay after text generation to respect rate limits
+          await new Promise(resolve => setTimeout(resolve, 2000));
+        }
+        
+        // Step 2: Build the full prompt with the character description
+        // If we generated the character from axes, don't include axis details again
+        const prompt = getPromptForCell(cell.coord, characterDesc, !useGeneratedCharacter);
+
+        // Step 3: Generate the image
         const base64Image = await generateImage(prompt);
         setGridData(prev => ({
           ...prev,
@@ -126,6 +159,7 @@ const App: React.FC = () => {
             ...prev[id],
             imageUrl: base64Image,
             prompt: prompt,
+            characterDescription: characterDesc,
             status: 'success'
           }
         }));
@@ -353,6 +387,9 @@ const App: React.FC = () => {
               className="w-full bg-gray-800 border border-gray-700 rounded-lg p-3 text-sm focus:ring-2 focus:ring-blue-500 outline-none resize-none h-24"
               placeholder="e.g. A cyberpunk detective..."
             />
+            <p className="text-[10px] text-gray-500">
+              💡 Leave empty or use default to let AI generate a character based on the axis dimensions
+            </p>
           </div>
 
           {/* Z-Axis Selector */}
@@ -459,8 +496,14 @@ const App: React.FC = () => {
                             Z: {selectedCell.coord.z} (Phys {mapIndexToDataLevel(selectedCell.coord.z, axisConfig.z)})
                         </span>
                     </div>
+                    {selectedCell.characterDescription && (
+                        <div className="bg-gradient-to-r from-amber-900/30 to-orange-900/30 border border-amber-700/50 rounded-lg p-2">
+                            <span className="text-[10px] text-amber-400 uppercase tracking-wider font-bold">AI Generated Character</span>
+                            <p className="text-sm text-amber-100 mt-1">{selectedCell.characterDescription}</p>
+                        </div>
+                    )}
                     <p className="text-sm text-gray-300 leading-relaxed font-mono bg-gray-950 p-3 rounded border border-gray-800">
-                        {getPromptForCell(selectedCell.coord, subject)}
+                        {selectedCell.prompt || getPromptForCell(selectedCell.coord, subject)}
                     </p>
                     <div className="flex gap-2 mt-2">
                          <button 
